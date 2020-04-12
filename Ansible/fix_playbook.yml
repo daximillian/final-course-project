@@ -1,0 +1,19 @@
+---
+- hosts: jenkins_server, all_nodes, db_servers, ELK_server
+  become: yes
+  become_method: sudo
+  vars: 
+    keys_path: ./keys
+  tasks:
+    - include_role:
+        name: mysql
+      when: inventory_hostname in groups['db_servers']   
+      
+    - name: Install Java for Debian on all nodes.
+      apt:
+        name:
+        - openjdk-8-jdk
+        state: present
+        update_cache: yes
+      when: inventory_hostname in groups['all_nodes']
+  

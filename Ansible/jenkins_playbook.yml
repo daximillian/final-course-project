@@ -1,5 +1,5 @@
 ---
-- hosts: servers, all_nodes
+- hosts: jenkins_server, all_nodes, db_servers, ELK_server
   become: yes
   become_method: sudo
   vars: 
@@ -7,36 +7,35 @@
   tasks:
     - include_role:
         name: docker
+      when: inventory_hostname in groups['jenkins_server'] or inventory_hostname in groups['all_nodes']   
+    - include_role:
+        name: mysql
+      when: inventory_hostname in groups['db_servers']   
+    - include_role:
+        name: ELK
+      when: inventory_hostname in groups['ELK_server']
     
     - name: Flush docker handlers.
       meta: flush_handlers
-
-    - name: Install Java for RedHat on all nodes.
-      yum:
-        name:
-        - java-1.8.0
-        state: present
-        update_cache: yes
-      when: inventory_hostname in groups['all_nodes'] and ansible_os_family == 'RedHat'
-    
+   
     - name: Install Java for Debian on all nodes.
       apt:
         name:
         - openjdk-8-jdk
         state: present
         update_cache: yes
-      when: inventory_hostname in groups['all_nodes'] and ansible_os_family == 'Debian'
+      when: inventory_hostname in groups['all_nodes']
   
     - name: Copy jenkins docker YAML file
       copy:
         src: ./jenkins.yml
         dest: ~/jenkins.yml
-      when: inventory_hostname in groups['servers'] 
+      when: inventory_hostname in groups['jenkins_server'] 
 
     - name: Run Jenkins
       script:
         cmd: ./run_jenkins.sh
-      when: inventory_hostname in groups['servers'] 
+      when: inventory_hostname in groups['jenkins_server'] 
 
     - name: Add an apt signing key for Kubernetes
       apt_key:
@@ -89,7 +88,7 @@
       copy:
         src: "{{keys_path}}/{{ansible_user}}_known_host.pub"
         dest: "/home/{{ansible_user}}/.ssh/{{ansible_user}}_known_host.pub"
-      when: inventory_hostname in groups['servers']
+      when: inventory_hostname in groups['jenkins_server']
 
     - name: Copy create node credentials script
       copy:
@@ -103,17 +102,17 @@
         path: /var/jenkins_home/.ssh
         state: directory
         mode: '0755'
-      when: inventory_hostname in groups['servers'] 
+      when: inventory_hostname in groups['jenkins_server'] 
 
     - name: Update Jenkins master known hosts
       shell: cat "/home/{{ansible_user}}/.ssh/{{ansible_user}}_known_host.pub" >> /var/jenkins_home/.ssh/known_hosts
-      when: inventory_hostname in groups['servers'] 
+      when: inventory_hostname in groups['jenkins_server'] 
 
     - name: Wait for port 8080 to become open on the jenkins master.
       wait_for:
         port: 8080
         delay: 10
-      when: inventory_hostname in groups['servers'] 
+      when: inventory_hostname in groups['jenkins_server'] 
 
     - name: Create node credentials
       shell: /home/ubuntu/create_credentials.py {{master_ip}} "/home/{{ansible_user}}/.ssh/{{ansible_user}}_rsa"
@@ -139,5 +138,72 @@
         - ../terraform/global/VPC/kubeconfig_*
       when: inventory_hostname in groups['all_nodes']
 
+    - name: Copy helm-consul-values.yaml to node
+      copy:
+        src: ./helm-consul-values.yaml
+        dest: /home/ubuntu
+        mode: 0755
+      when: inventory_hostname in groups['all_nodes']
+
+    - name: Copy prometheus-values.yml to node
+      copy:
+        src: ./prometheus-values.yml
+        dest: /home/ubuntu
+        mode: 0755
+      when: inventory_hostname in groups['all_nodes']
+
+    - name: Copy grafana-values.yml to node
+      copy:
+        src: ./grafana-values.yml
+        dest: /home/ubuntu
+        mode: 0755
+      when: inventory_hostname in groups['all_nodes']
+
+    - name: Copy grafana-dashboards.yml to node
+      copy:
+        src: ./grafana-dashboards.yml
+        dest: /home/ubuntu
+        mode: 0755
+      when: inventory_hostname in groups['all_nodes']
+      
+    - name: Run consul helm install
+      script:
+        cmd: ./run_helm.sh
+      when: inventory_hostname in groups['all_nodes']
+
+    - name: Run coreDNS update
+      script:
+        cmd: ./coredns.sh
+      when: inventory_hostname in groups['all_nodes']
+
+    - name: Copy filebeat.yml to node
+      copy:
+        src: ./filebeat.yml
+        dest: /home/ubuntu
+        mode: 0755
+
+    - name: Copy system.yml to node
+      copy:
+        src: ./system.yml
+        dest: /home/ubuntu
+        mode: 0755
+
+    - name: Copy mysql.yml to node
+      copy:
+        src: ./mysql.yml
+        dest: /home/ubuntu
+        mode: 0755
+
+    - name: Run filebeat installation
+      script:
+        cmd: ./filebeat.sh
+
+    - name: Install jmeter
+      apt: 
+        name: 
+        - jmeter
+        state: present
+        update_cache: yes  
+      when: inventory_hostname in groups['all_nodes']
     
   

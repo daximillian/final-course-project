@@ -39,11 +39,12 @@ module "eks" {
   worker_groups = [
     {
       name                          = "worker-group-1"
-      instance_type                 = "t2.micro"
+      instance_type                 = "t2.medium"
       # additional_userdata           = "echo foo bar"
       asg_desired_capacity          = 2 
       asg_max_size                  = 2
-      additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id]
+      additional_security_group_ids = [aws_security_group.worker_group_mgmt_one.id, aws_security_group.opsschool_consul.id,
+      aws_security_group.monitor_sg.id]
     }
     # }, when there's more than one worker group, delete the previous } and replace it with this.
     # {
@@ -55,7 +56,8 @@ module "eks" {
     # },
   ]
 
-  worker_additional_security_group_ids = [aws_security_group.all_worker_mgmt.id]
+  worker_additional_security_group_ids = [aws_security_group.all_worker_mgmt.id, aws_security_group.opsschool_consul.id,
+  aws_security_group.monitor_sg.id]
   map_roles  = [
     {
         rolearn  = aws_iam_role.eks-kubectl.arn

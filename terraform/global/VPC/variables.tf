@@ -28,7 +28,7 @@ variable "instance_type" {
 variable "ingress_ports" {
   type        = list(number)
   description = "list of ingress ports"
-  default     = [22, 443, 8080, 5000, 2375, 80]
+  default     = [22, 443, 8080, 5000, 2375, 80, 9200, 5601]
 }
 
 variable "opsschool_remote_state_bucket" {
@@ -45,5 +45,5 @@ variable "opsschool_remote_state_key" {
 
 variable "consul_version" {
   description = "The version of Consul to install (server and client)."
-  default     = "1.4.0"
+  default     = "1.7.1"
 }

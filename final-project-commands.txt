@@ -1,0 +1,23 @@
+terraform init
+terraform validate
+terraform plan -out VPC_project.tfplan
+terraform apply "VPC_project.tfplan"
+terraform destroy
+
+
+In terraform directory:
+--------------------
+chmod 400 VPC-demo-key.pem
+ansible all -i hosts.INI -m ping
+ansible-playbook ../../../Ansible/jenkins_playbook.yml -i hosts.INI
+ansible-playbook ../../../Ansible/prometheus-playbook.yml -i hosts.INI 
+
+=================
+ssh -i "VPC-demo-key.pem" -F ssh_config ubuntu@10.0.4.125
+10.0.4.96
+
+scp -i "VPC-demo-key.pem" -F ssh_config ../../../Ansible/jenkins.yml ubuntu@10.0.3.101:/home/ubuntu
+jenkins.yml
+
+
+listen-address=172.17.0.1

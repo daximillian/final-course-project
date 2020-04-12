@@ -18,13 +18,33 @@ output "config_map_aws_auth" {
   value       = module.eks.config_map_aws_auth
 }
 
-output "jenkins_server_public_address" {
-    value = aws_instance.jenkins_server.*.public_ip
+output "jenkins_server_private_address" {
+    value = aws_instance.jenkins_server.*.private_ip
 }
-output "jenkins_ubuntu-nodes_public_addresses" {
-    value = aws_instance.ubuntu-nodes.*.public_ip
+output "jenkins_ubuntu-nodes_private_addresses" {
+    value = aws_instance.ubuntu-nodes.*.private_ip
 }
 
 output "consul-server_private_addresses" {
     value = aws_instance.consul_server.*.private_ip
+}
+
+output "db-server_private_addresses" {
+    value = aws_instance.db-server.*.private_ip
+}
+
+output "ELK-server_private_addresses" {
+    value = aws_instance.ELK-server.*.private_ip
+}
+
+output "bastion_server_public_addresses" {
+    value = aws_instance.bastion.public_ip
+}
+
+output "jenkins-elb" {
+    value = aws_elb.jenkins-elb.dns_name
+}
+
+output "ELK-elb" {
+    value = aws_elb.ELK-elb.dns_name
 }

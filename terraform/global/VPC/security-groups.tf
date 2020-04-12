@@ -100,6 +100,121 @@ resource "aws_iam_instance_profile" "eks-kubectl" {
   role = aws_iam_role.eks-kubectl.name
 }
 
+resource "aws_security_group" "mysql-sg" {
+  name        = "mysql-sg"
+  description = "Allow ssh & mysql inbound traffic"
+  vpc_id      = aws_vpc.terra_vpc.id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    self        = true
+    description = "Allow all inside security group"
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow ssh from the world"
+  }
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow mysql from the world"
+  }
+
+  ingress {
+    from_port   = 33062
+    to_port     = 33062
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow mysql from the world"
+  }
+
+    ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow https from the world"
+  }
+
+    ingress {
+    from_port   = 9104
+    to_port     = 9104
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow mysql exporter from the world"
+  }
+
+  ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow node exporter from the world"
+  }
+  
+  ingress {
+    from_port   = 9200
+    to_port     = 9200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow elasticsearch from the world"
+  }
+
+  ingress {
+    from_port   = 5601
+    to_port     = 5601
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow kibana from the world"
+  }
+
+   ingress {
+   from_port   = 8
+   to_port     = 0
+   protocol    = "icmp"
+   cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+    description     = "Allow all outside security group"
+  }
+}
+
+resource "aws_security_group" "bastion_sg" {
+  name = "bastion_sg"
+  vpc_id      = aws_vpc.terra_vpc.id
+
+  ingress {
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
+
+    cidr_blocks = [
+      # "100.67.11.109/32",
+      "0.0.0.0/0"
+    ]
+  }
+   egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_security_group" "opsschool_consul" {
   name        = "opsschool-consul"
   description = "Allow ssh & consul inbound traffic"
@@ -146,13 +261,122 @@ resource "aws_security_group" "opsschool_consul" {
   }
 
   ingress {
-    from_port   = 8500
+    from_port   = 8500  
     to_port     = 8500
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     description = "Allow consul UI access from the world"
   }  
 
+    ingress {
+    from_port   = 8300
+    to_port     = 8300
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+
+   ingress {
+    from_port   = 8500  
+    to_port     = 8500
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+
+    ingress {
+    from_port   = 8300
+    to_port     = 8300
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+
+  ingress {
+    from_port   = 8301
+    to_port     = 8301
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+
+  ingress {
+    from_port   = 8301
+    to_port     = 8301
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+    ingress {
+    from_port   = 8302
+    to_port     = 8302
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+
+  ingress {
+    from_port   = 8302
+    to_port     = 8302
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+   ingress {
+    from_port   = 8400
+    to_port     = 8400
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  }  
+
+  ingress {
+    from_port   = 8400
+    to_port     = 8400
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul UI access from the world"
+  } 
+
+  ingress {
+    from_port   = 8600
+    to_port     = 8600
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul DNS access from the world"
+  }  
+
+  ingress {
+    from_port   = 8600
+    to_port     = 8600
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul DNS access from the world"
+  }  
+  ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow node exporter access from the world"
+  } 
+
+  ingress {
+    from_port   = 9200
+    to_port     = 9200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow elasticsearch from the world"
+  }
+
+  ingress {
+    from_port   = 5601
+    to_port     = 5601
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow kibana from the world"
+  }
+  
    ingress {
    from_port   = 8
    to_port     = 0
@@ -169,6 +393,122 @@ resource "aws_security_group" "opsschool_consul" {
   }
 }
 
+resource "aws_security_group" "elk_sg" {
+  name = "elk_sg"
+  description = "All all elasticsearch traffic"
+  vpc_id      = aws_vpc.terra_vpc.id
+
+  # elasticsearch port
+  ingress {
+    from_port   = 9200
+    to_port     = 9200
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # logstash port
+  ingress {
+    from_port   = 5044
+    to_port     = 5044
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # kibana ports
+  ingress {
+    from_port   = 5601
+    to_port     = 5601
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # ssh
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # outbound
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+}
+
+#Monitoring Security Group
+resource "aws_security_group" "monitor_sg" {
+  name        = "monitor_sg"
+  description = "Security group for monitoring server"
+  vpc_id      = aws_vpc.terra_vpc.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow ICMP from control host IP
+  ingress {
+    from_port   = 8
+    to_port     = 0
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all SSH External
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all traffic to HTTP port 3000
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all traffic to HTTP port 9090
+  ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all traffic to HTTP port 9100
+  ingress {
+    from_port   = 9100
+    to_port     = 9100
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all traffic to HTTP port 9104
+  ingress {
+    from_port   = 9104
+    to_port     = 9104
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+    # Allow all traffic to HTTP port 5000
+  ingress {
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
 # Create an IAM role for the auto-join
 resource "aws_iam_role" "consul-join" {
   name               = "opsschool-consul-join"

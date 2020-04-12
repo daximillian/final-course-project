@@ -1,0 +1,48 @@
+---
+# tasks file for roles/ELK
+- name: Install basic ELK stack
+  script:
+    cmd: ./inst_ELK.sh
+
+- name: Copy elasticsearch configs
+  copy:
+    src: ./elasticsearch.yml
+    dest: /etc/elasticsearch/
+  notify:
+    - Restart elasticsearch     
+
+- name: Copy kibana configs
+  copy:
+    src: ./kibana.yml 
+    dest: /etc/kibana/
+  notify:
+    - Restart kibana 
+
+- name: Copy logstash configs
+  copy:
+    src: ./logstash.conf
+    dest: /etc/logstash/conf.d/
+  notify:
+    - Restart logstash 
+
+- name: Copy filebeat.yml to node
+  copy:
+    src: ./filebeat.yml
+    dest: /home/ubuntu
+    mode: 0755
+
+- name: Copy system.yml to node
+  copy:
+    src: ./system.yml
+    dest: /home/ubuntu
+    mode: 0755
+
+- name: Copy mysql.yml to node
+  copy:
+    src: ./mysql.yml
+    dest: /home/ubuntu
+    mode: 0755
+
+- name: Run filebeat installation
+  script:
+    cmd: ./filebeat.sh

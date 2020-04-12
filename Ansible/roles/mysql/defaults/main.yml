@@ -1,0 +1,6 @@
+---
+mysql_port: 3306 #Default is 3306, please change it if you are using non-standard
+mysql_bind_address: "0.0.0.0" 
+mysql_root_pass: mypassword #MySQL Root Password
+mysql_app_pass: "123456"
+mysqld_exporter_pass: circe123
