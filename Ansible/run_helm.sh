@@ -19,6 +19,7 @@ kubectl patch svc grafana --namespace monitoring -p '{"spec": {"type": "LoadBala
 
 sleep 10s 
 
+kubectl create -f filebeat-kubernetes.yaml  
 # kubectl patch svc prometheus-server --namespace monitoring -p '{"spec": {"type": "LoadBalancer"}}'
 
 # sleep 10s 

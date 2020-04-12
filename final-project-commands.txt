@@ -13,8 +13,8 @@ ansible-playbook ../../../Ansible/jenkins_playbook.yml -i hosts.INI
 ansible-playbook ../../../Ansible/prometheus-playbook.yml -i hosts.INI 
 
 =================
-ssh -i "VPC-demo-key.pem" -F ssh_config ubuntu@10.0.4.125
-10.0.4.96
+ssh -i "VPC-demo-key.pem" -F ssh_config ubuntu@10.0.3.18
+
 
 scp -i "VPC-demo-key.pem" -F ssh_config ../../../Ansible/jenkins.yml ubuntu@10.0.3.101:/home/ubuntu
 jenkins.yml

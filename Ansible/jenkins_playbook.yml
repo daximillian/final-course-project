@@ -165,7 +165,14 @@
         dest: /home/ubuntu
         mode: 0755
       when: inventory_hostname in groups['all_nodes']
-      
+
+    - name: Copy filebeat-kubernetes.yaml to node
+      copy:
+        src: ./filebeat-kubernetes.yaml  
+        dest: /home/ubuntu
+        mode: 0755
+      when: inventory_hostname in groups['all_nodes']
+    
     - name: Run consul helm install
       script:
         cmd: ./run_helm.sh
@@ -176,6 +183,14 @@
         cmd: ./coredns.sh
       when: inventory_hostname in groups['all_nodes']
 
+    - name: Install jmeter
+      apt: 
+        name: 
+        - jmeter
+        state: present
+        update_cache: yes  
+      when: inventory_hostname in groups['all_nodes']
+    
     - name: Copy filebeat.yml to node
       copy:
         src: ./filebeat.yml
@@ -197,13 +212,3 @@
     - name: Run filebeat installation
       script:
         cmd: ./filebeat.sh
-
-    - name: Install jmeter
-      apt: 
-        name: 
-        - jmeter
-        state: present
-        update_cache: yes  
-      when: inventory_hostname in groups['all_nodes']
-    
-  

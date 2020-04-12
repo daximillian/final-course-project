@@ -24,25 +24,3 @@
     dest: /etc/logstash/conf.d/
   notify:
     - Restart logstash 
-
-- name: Copy filebeat.yml to node
-  copy:
-    src: ./filebeat.yml
-    dest: /home/ubuntu
-    mode: 0755
-
-- name: Copy system.yml to node
-  copy:
-    src: ./system.yml
-    dest: /home/ubuntu
-    mode: 0755
-
-- name: Copy mysql.yml to node
-  copy:
-    src: ./mysql.yml
-    dest: /home/ubuntu
-    mode: 0755
-
-- name: Run filebeat installation
-  script:
-    cmd: ./filebeat.sh
