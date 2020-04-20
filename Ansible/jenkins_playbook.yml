@@ -1,5 +1,5 @@
 ---
-- hosts: jenkins_server, all_nodes, db_servers, ELK_server
+- hosts: jenkins_server, all_nodes, db_servers, ELK_server, consul_servers
   become: yes
   become_method: sudo
   vars: 
@@ -191,19 +191,19 @@
         update_cache: yes  
       when: inventory_hostname in groups['all_nodes']
     
-    - name: Copy filebeat.yml to node
+    - name: Copy filebeat.yml to servers
       copy:
         src: ./filebeat.yml
         dest: /home/ubuntu
         mode: 0755
 
-    - name: Copy system.yml to node
+    - name: Copy system.yml to servers
       copy:
         src: ./system.yml
         dest: /home/ubuntu
         mode: 0755
 
-    - name: Copy mysql.yml to node
+    - name: Copy mysql.yml to servers
       copy:
         src: ./mysql.yml
         dest: /home/ubuntu
@@ -212,3 +212,10 @@
     - name: Run filebeat installation
       script:
         cmd: ./filebeat.sh
+
+    - name: Run consul_exporter installation
+      script:
+        cmd: ./inst_consul_exporter.sh
+      when: inventory_hostname in groups['consul_servers']
+
+  

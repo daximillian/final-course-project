@@ -5,19 +5,16 @@ terraform apply "VPC_project.tfplan"
 terraform destroy
 
 
-In terraform directory:
---------------------
+In terraform/global/VPC directory:
+----------------------------------
 chmod 400 VPC-demo-key.pem
 ansible all -i hosts.INI -m ping
 ansible-playbook ../../../Ansible/jenkins_playbook.yml -i hosts.INI
-ansible-playbook ../../../Ansible/prometheus-playbook.yml -i hosts.INI 
 
 =================
 ssh -i "VPC-demo-key.pem" -F ssh_config ubuntu@10.0.3.18
 
-
-scp -i "VPC-demo-key.pem" -F ssh_config ../../../Ansible/jenkins.yml ubuntu@10.0.3.101:/home/ubuntu
-jenkins.yml
-
-
-listen-address=172.17.0.1
+through the Jenkins ubuntu node:
+--------------------------------
+kubectl get svc -n monitoring
+kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo

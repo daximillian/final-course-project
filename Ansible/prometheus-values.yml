@@ -165,5 +165,9 @@ serverFiles:
         - targets: ['mysql.service.consul:9104']
           labels:
            alias: db1
-
+    - job_name: 'consul_exporter'
+      static_configs:
+        - targets: ['consul.service.consul:9107']
+          labels:
+           alias: consulsrv
 

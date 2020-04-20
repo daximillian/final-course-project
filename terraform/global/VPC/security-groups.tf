@@ -362,6 +362,22 @@ resource "aws_security_group" "opsschool_consul" {
   } 
 
   ingress {
+    from_port   = 9107
+    to_port     = 9107
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul exporter access from the world"
+  } 
+
+  ingress {
+    from_port   = 9107
+    to_port     = 9107
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul exporter access from the world"
+  }  
+
+  ingress {
     from_port   = 9200
     to_port     = 9200
     protocol    = "tcp"
@@ -508,6 +524,22 @@ resource "aws_security_group" "monitor_sg" {
     protocol    = "TCP"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
+  ingress {
+    from_port   = 9107
+    to_port     = 9107
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul exporter access from the world"
+  } 
+
+  ingress {
+    from_port   = 9107
+    to_port     = 9107
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow consul exporter access from the world"
+  }  
 }
 # Create an IAM role for the auto-join
 resource "aws_iam_role" "consul-join" {

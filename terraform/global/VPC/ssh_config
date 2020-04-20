@@ -1,5 +1,5 @@
 Host jumphost
-  HostName 3.219.41.171
+  HostName 3.230.171.83
   User ubuntu
   IdentityFile VPC-demo-key.pem
   PasswordAuthentication no

@@ -16,6 +16,7 @@ dashboardProviders:
      folder: ''
      type: file
      disableDeletion: false
+     allowUiUpdates: true
      editable: true
      options:
        path: /var/lib/grafana/dashboards
@@ -29,17 +30,12 @@ notifiers:
      uid: grafana
      org_id: 1
      is_default: true
-     send_reminder: true
-     frequency: 1h
+     send_reminder: false
      disable_resolve_message: false
      # See `Supported Settings` section for settings supporter for each
      # alert notification type.
      settings:
-       recipient: nofars
+       recipient: "#final-project"
        # token: "xoxb"
        uploadImage: false
-       url: https://hooks.slack.com/services/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
- delete_notifiers:
-   - name: slack-channel
-     uid: grafana
-     org_id: 1
+       url: 

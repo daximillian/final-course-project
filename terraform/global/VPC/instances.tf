@@ -303,13 +303,15 @@ data "template_file" "dev_hosts" {
     aws_instance.jenkins_server,
     aws_instance.ubuntu-nodes,
     aws_instance.db-server,
-    aws_instance.ELK-server
+    aws_instance.ELK-server,
+    aws_instance.consul_server
   ]
   vars = {
     jenkins_server = aws_instance.jenkins_server.private_ip
     ubuntu_nodes = aws_instance.ubuntu-nodes.private_ip
     ELK_server = aws_instance.ELK-server.private_ip
     db_servers = "${join("\n", [for instance in aws_instance.db-server : instance.private_ip] )}"
+    consul_servers = "${join("\n", [for instance in aws_instance.consul_server : instance.private_ip] )}"
   }
 }
 

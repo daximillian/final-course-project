@@ -8,6 +8,10 @@ output.elasticsearch:
       when.contains:
         message: "ERR"
 
+filebeat.inputs:
+- type: docker
+  containers.ids: '*'
+
 filebeat.config.modules:
   enabled: true
   path: ${path.config}/modules.d/*.yml
