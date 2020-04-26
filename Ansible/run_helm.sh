@@ -2,7 +2,7 @@
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
-git clone https://github.com/hashicorp/consul-helm.git
+git clone --single-branch --branch v0.19.0 https://github.com/hashicorp/consul-helm.git
 export KUBECONFIG=/home/ubuntu/kubeconfig_opsSchool-eks
 helm install -f /home/ubuntu/helm-consul-values.yaml opsschool /home/ubuntu/consul-helm
 
