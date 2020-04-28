@@ -14,3 +14,6 @@
 # .pem files
 *.pem
 
+# host file
+hosts.INI
+

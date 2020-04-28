@@ -97,16 +97,16 @@ to get the password for Grafana.
 
 ## To update Prometheus/Grafana:
 - To change the slack token for grafana, add more scrape jobs or provision more dashboards, use the following commands to restart Prometheus and Grafana for the changes to take place:
-`kubectl delete svc grafana -n monitoring`
-`helm upgrade -f grafana-values.yml grafana stable/grafana -n monitoring`
-`kubectl patch svc grafana --namespace monitoring -p '{"spec": {"type": "LoadBalancer"}}'`
+`kubectl delete svc grafana -n monitoring`  
+`helm upgrade -f grafana-values.yml grafana stable/grafana -n monitoring`  
+`kubectl patch svc grafana --namespace monitoring -p '{"spec": {"type": "LoadBalancer"}}'`  
 
-`kubectl get svc -n monitoring`
-`kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo`
+`kubectl get svc -n monitoring`  
+`kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo`  
 
 
-`kubectl delete svc prometheus-server -n monitoring`
-`helm upgrade -f prometheus-values.yml prometheus stable/prometheus -n monitoring`
+`kubectl delete svc prometheus-server -n monitoring`  
+`helm upgrade -f prometheus-values.yml prometheus stable/prometheus -n monitoring`  
 
 ## To load the ELK dashboard:
 - To get to the ELK server, use the ELK load-balancer DNS address printed out by terraform and access it on the 5601 port.
@@ -114,13 +114,13 @@ to get the password for Grafana.
 - Click on Management
 - Click on Saved Objects
 - Click on the Import button
-- Browse ELK-dashboards.ndjson in this repo
+- Browse ELKdashboards.ndjson in this repo
 - Import. The dashboards and info all start with `phonebook`.
 
 ## To bring everything down:
 Terraform may have issues bringing the load balancers down. To avoid these issues you get bring it down yourself with `kubectl delete svc phonebook-lb` and `kubectl delete svc grafana -n monitoring` or by deleting the load balancers through the AWS console.  
 Once the load-balancers is down, cd into the terraform/global/VPC directory and run:  
-`terraform destroy`
+`terraform destroy`  
 Remeber - if you brought up the prometheus load-balancer, you have to delete it too via `kubectl delete svc prometheus-server -n monitoring`. 
 
 The s3 statefile bucket is set to not allow it to be accidentaly destroyed. Make sure you know what you're doing before
