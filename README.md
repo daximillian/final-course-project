@@ -96,7 +96,7 @@ to get the password for Grafana.
 -  ssh to the Jenkins node using the VPC-demo-key.pem (`ssh -i "VPC-demo-key.pem" -F ssh_config ubuntu@<IP>`), then `export KUBECONFIG=./kubeconfig_opsSchool-eks` and run `kubectl patch svc prometheus-server --namespace monitoring -p '{"spec": {"type": "LoadBalancer"}}'` and `kubectl get svc -n monitoring` to get the prometheus-server load-balancer address. It takes several minutes for it to become accessible.
 
 ## To update Prometheus/Grafana:
-- To change the slack token for grafana, add more scrape jobs or provision more dashboards, use the following commands to restart Prometheus and Grafana for the changes to take place:
+- To change the slack token for grafana, add more scrape jobs or provision more dashboards, use the following commands to restart Prometheus and Grafana for the changes to take place:  
 `kubectl delete svc grafana -n monitoring`  
 `helm upgrade -f grafana-values.yml grafana stable/grafana -n monitoring`  
 `kubectl patch svc grafana --namespace monitoring -p '{"spec": {"type": "LoadBalancer"}}'`  
